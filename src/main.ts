@@ -1,5 +1,9 @@
-import { Application, Assets, Sprite } from "pixi.js";
-import { createShip } from "./ship";
+import { Application } from "pixi.js";
+import { animateShip, createShip } from "./ship";
+import { animateAsteroids, createAsteroids } from "./asteroid";
+import { AsteroidType, BulletType } from "./utils/types";
+import { updateGameLogic } from "./gamelogic";
+import { animateBullets } from "./bullet";
 
 const app = new Application();
 
@@ -51,11 +55,18 @@ async function preload() {
   await setup();
   await preload();
 
-  createShip(app, keyFlags);
+  let asteroids: AsteroidType[] = [];
+  let bullets: BulletType[] = [];
+
+  let ship = createShip(app);
+  createAsteroids(app, asteroids);
 
   // Add the animation callbacks to the application's ticker.
   app.ticker.add((time) => {
-    // animateFishes(app, fishes, time);
-    // animateWaterOverlay(app, time);
+    animateShip(app, ship, keyFlags, bullets);
+    animateAsteroids(app, asteroids);
+    animateBullets(app, bullets);
+
+    updateGameLogic(app, ship, asteroids, bullets);
   });
 })();

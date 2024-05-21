@@ -1,9 +1,13 @@
-import { Application, Graphics, ObservablePoint } from "pixi.js";
+import { Application, Graphics } from "pixi.js";
+import { BulletType } from "./utils/types";
+
+// fixme: make animation independant of bullet instance
 
 export default function fireBullet(
   app: Application,
   position: { x: number; y: number },
-  direction: number
+  direction: number,
+  bullets: BulletType[]
 ) {
   const bullet = new Graphics();
   bullet.circle(0, 0, 5);
@@ -11,9 +15,15 @@ export default function fireBullet(
   bullet.position.set(position.x, position.y);
   bullet.rotation = direction;
 
+  app.stage.addChild(bullet);
+  bullets.push({ bullet, enemy: false });
+}
+
+export function animateBullets(app: Application, bullets: BulletType[]) {
   const speed = 5;
 
-  app.ticker.add(() => {
+  for (let i = 0; i < bullets.length; i++) {
+    const bullet = bullets[i].bullet;
     bullet.position.x += speed * Math.cos(bullet.rotation);
     bullet.position.y += speed * Math.sin(bullet.rotation);
 
@@ -25,7 +35,5 @@ export default function fireBullet(
     ) {
       app.stage.removeChild(bullet);
     }
-  });
-
-  app.stage.addChild(bullet);
+  }
 }
