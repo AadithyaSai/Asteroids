@@ -1,6 +1,7 @@
-import { Application, Graphics } from "pixi.js";
+import { Application, Graphics, Point } from "pixi.js";
 import fireBullet from "./bullet";
 import { BulletType } from "./utils/types";
+import { collisionCheck } from "./utils/common";
 
 export function createShip(app: Application) {
   const ship = new Graphics();
@@ -70,11 +71,10 @@ export function animateShip(
   if (keyFlags.get(" ")) {
     if (new Date().getTime() - lastShot > 300) {
       lastShot = new Date().getTime();
-      let pos = {
-        x: ship.position.x,
-        y: ship.position.y,
-      };
-      fireBullet(app, pos, ship.rotation, bullets);
+
+      const pos = new Point(ship.height, ship.width / 2);
+
+      fireBullet(app, ship.toGlobal(pos), ship.rotation, bullets);
     }
   }
 }
