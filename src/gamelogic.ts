@@ -1,6 +1,6 @@
 import { Application, Graphics } from "pixi.js";
 import { AsteroidType, BulletType } from "./utils/types";
-import { collisionCheck } from "./utils/common";
+import { collisionCheck, explode } from "./utils/common";
 import { createAsteroids, splitAsteroid } from "./asteroid";
 import { destroyShip } from "./ship";
 
@@ -28,6 +28,7 @@ function checkShipCollision(
     if (ship.visible) {
       if (collisionCheck(asteroid, ship)) {
         destroyShip(app, ship);
+        explode(app, asteroid.position);
         splitAsteroid(app, asteroids, i);
       }
     }
@@ -46,6 +47,7 @@ function checkBulletCollision(
         app.stage.removeChild(bullet);
         bullets.splice(j, 1);
         splitAsteroid(app, asteroids, i);
+        explode(app, asteroid.position);
       }
     }
   }

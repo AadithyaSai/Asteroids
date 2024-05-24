@@ -29,6 +29,7 @@ function createAsteroid(scale: number) {
   const asteroid = new Graphics();
   asteroid.poly([-5, -5, 5, -5, 5, 5, -5, 5]);
   asteroid.closePath();
+  asteroid.fill("0xffffff");
   asteroid.stroke({ width: 1 / scale, color: "0xffffff" });
   asteroid.scale.set(scale);
 

@@ -1,4 +1,5 @@
 import { Application, Graphics } from "pixi.js";
+import { GlowFilter } from "pixi-filters";
 import { BulletType } from "./utils/types";
 
 // fixme: make animation independant of bullet instance
@@ -10,10 +11,12 @@ export default function fireBullet(
   bullets: BulletType[]
 ) {
   const bullet = new Graphics();
-  bullet.circle(0, 0, 5);
+  bullet.circle(0, 0, 2);
   bullet.fill("0xffffff");
   bullet.position.set(position.x, position.y);
   bullet.rotation = direction;
+
+  bullet.filters = [new GlowFilter()];
 
   app.stage.addChild(bullet);
   bullets.push({ bullet, enemy: false });

@@ -7,6 +7,8 @@ import { animateBullets } from "./bullet";
 
 const app = new Application();
 
+let gameState = "start";
+
 const keyFlags = new Map<string, boolean>();
 keyFlags.set("ArrowUp", false);
 keyFlags.set("ArrowDown", false);
@@ -44,16 +46,9 @@ async function setup() {
   });
 }
 
-async function preload() {
-  // Create an array of asset data to load.
-  // Load the assets defined above.
-  // await Assets.load(assets);
-}
-
 // Asynchronous IIFE
 (async () => {
   await setup();
-  await preload();
 
   let asteroids: AsteroidType[] = [];
   let bullets: BulletType[] = [];

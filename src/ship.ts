@@ -1,7 +1,6 @@
 import { Application, Graphics, Point } from "pixi.js";
 import fireBullet from "./bullet";
 import { BulletType } from "./utils/types";
-import { collisionCheck } from "./utils/common";
 
 export function createShip(app: Application) {
   const ship = new Graphics();
@@ -45,10 +44,13 @@ export function animateShip(
     dy *= 0.99;
   }
   if (keyFlags.get("ArrowLeft") || keyFlags.get("a")) {
-    ship.rotation -= 0.05;
+    ship.rotation -= 0.02;
   }
   if (keyFlags.get("ArrowRight") || keyFlags.get("d")) {
-    ship.rotation += 0.05;
+    ship.rotation += 0.02;
+  }
+  if (keyFlags.get("ArrowDown") || keyFlags.get("s")) {
+    // TODO: wormhole
   }
   ship.rotation %= Math.PI * 2;
 
