@@ -1,67 +1,22 @@
-import { Application } from "pixi.js";
-import { animateShip, createShip } from "./ship";
-import { animateAsteroids, createAsteroids } from "./asteroid";
-import { AsteroidType, BulletType } from "./utils/types";
-import { updateGameLogic } from "./gamelogic";
-import { animateBullets } from "./bullet";
+import { startGame } from "./game";
 
-const app = new Application();
+const startDiv = document.getElementById("start")!;
+const gameDiv = document.getElementById("game")!;
+const endDiv = document.getElementById("end")!;
 
-let gameState = "start";
+const startButtons = document.querySelectorAll(".start-button")!;
 
-const keyFlags = new Map<string, boolean>();
-keyFlags.set("ArrowUp", false);
-keyFlags.set("ArrowDown", false);
-keyFlags.set("ArrowLeft", false);
-keyFlags.set("ArrowRight", false);
-keyFlags.set("w", false);
-keyFlags.set("s", false);
-keyFlags.set("a", false);
-keyFlags.set("d", false);
-keyFlags.set(" ", false);
-
-async function setup() {
-  await app.init({
-    background: "#000",
-    resizeTo: window,
-    antialias: true,
-    autoDensity: true,
-    resolution: 2,
+startButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    startDiv.classList.add("hide");
+    endDiv.classList.add("hide");
+    gameDiv.classList.remove("hide");
+    startGame();
   });
+});
 
-  document.body.appendChild(app.canvas);
-
-  window.addEventListener("keydown", (event) => {
-    if (keyFlags.has(event.key)) {
-      event.preventDefault();
-      keyFlags.set(event.key, true);
-    }
-  });
-
-  window.addEventListener("keyup", (event) => {
-    if (keyFlags.has(event.key)) {
-      event.preventDefault();
-      keyFlags.set(event.key, false);
-    }
-  });
-}
-
-// Asynchronous IIFE
-(async () => {
-  await setup();
-
-  let asteroids: AsteroidType[] = [];
-  let bullets: BulletType[] = [];
-
-  let ship = createShip(app);
-  createAsteroids(app, asteroids);
-
-  // Add the animation callbacks to the application's ticker.
-  app.ticker.add((time) => {
-    animateShip(app, ship, keyFlags, bullets);
-    animateAsteroids(app, asteroids);
-    animateBullets(app, bullets);
-
-    updateGameLogic(app, ship, asteroids, bullets);
-  });
-})();
+window.addEventListener("gameover", () => {
+  gameDiv.classList.add("hide");
+  endDiv.classList.remove("hide");
+  console.log("Game Over");
+});
