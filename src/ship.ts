@@ -22,6 +22,13 @@ let dx = 0;
 let dy = 0;
 let lastShot = new Date().getTime();
 
+export function resetShipData() {
+  maxSpeed = 3;
+  dx = 0;
+  dy = 0;
+  lastShot = new Date().getTime();
+}
+
 export function animateShip(
   app: Application,
   ship: Graphics,
@@ -81,14 +88,14 @@ export function animateShip(
   }
 }
 
-export function destroyShip(app: Application, ship: Graphics) {
+export function destroyShip(_app: Application, ship: Graphics) {
   ship.visible = false;
 
-  setTimeout(() => {
-    ship.visible = true;
-    dx = 0;
-    dy = 0;
-    ship.position.set(app.screen.width / 2, app.screen.height / 2);
-    ship.rotation = 0;
-  }, 3000);
+  // setTimeout(() => {
+  //   ship.visible = true;
+  //   dx = 0;
+  //   dy = 0;
+  //   ship.position.set(app.screen.width / 2, app.screen.height / 2);
+  //   ship.rotation = 0;
+  // }, 3000);
 }

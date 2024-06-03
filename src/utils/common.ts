@@ -25,7 +25,7 @@ export function explode(app: Application, pos: Point) {
     const angle = Math.random() * Math.PI * 2;
 
     particle.position.set(pos.x, pos.y);
-    particle.velocity = new Point(
+    const velocity = new Point(
       speed * Math.cos(angle),
       speed * Math.sin(angle)
     );
@@ -41,8 +41,8 @@ export function explode(app: Application, pos: Point) {
       if (explosion.children.length === 0) {
         app.stage.removeChild(explosion);
       }
-      particle.position.x += particle.velocity.x;
-      particle.position.y += particle.velocity.y;
+      particle.position.x += velocity.x;
+      particle.position.y += velocity.y;
       size -= 0.1;
       gfx.scale.set(size / 5);
 

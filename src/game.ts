@@ -1,11 +1,9 @@
 import { Application } from "pixi.js";
-import { animateShip, createShip } from "./ship";
+import { animateShip, createShip, resetShipData } from "./ship";
 import { animateAsteroids, createAsteroids } from "./asteroid";
 import { AsteroidType, BulletType } from "./utils/types";
 import { updateGameLogic } from "./gamelogic";
 import { animateBullets } from "./bullet";
-
-let loaded = false;
 
 const keyFlags = new Map<string, boolean>();
 keyFlags.set("ArrowUp", false);
@@ -60,7 +58,7 @@ export async function startGame() {
   createAsteroids(app, asteroids);
 
   // Add the animation callbacks to the application's ticker.
-  app.ticker.add((time) => {
+  app.ticker.add(() => {
     animateShip(app, ship, keyFlags, bullets);
     animateAsteroids(app, asteroids);
     animateBullets(app, bullets);
@@ -69,6 +67,7 @@ export async function startGame() {
 
     if (ship.visible === false) {
       window.dispatchEvent(new Event("gameover"));
+      resetShipData();
       app.destroy();
     }
   });

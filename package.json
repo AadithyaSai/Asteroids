@@ -1,12 +1,16 @@
 {
   "name": "asteroids",
+  "homepage": "https://AadithyaSai.github.io/Asteroids/",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "npm run predeploy && gh-pages -d dist"
+
   },
   "devDependencies": {
     "typescript": "^5.2.2",
