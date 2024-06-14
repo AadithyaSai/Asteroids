@@ -11,9 +11,13 @@ export function createAsteroids(app: Application, asteroids: AsteroidType[]) {
   for (let i = 0; i < count; i++) {
     const asteroid = createAsteroid(4);
 
+    const safe = 100; // Safe distance from the ship. 200/2
+    const xpos = Math.random() * (app.screen.width / 2 - safe);
+    const ypos = Math.random() * (app.screen.height / 2 - safe);
+
     asteroid.position.set(
-      Math.random() * app.screen.width,
-      Math.random() * app.screen.height
+      Math.random() > 0.5 ? xpos + app.screen.width / 2 + safe : xpos,
+      Math.random() > 0.5 ? ypos + app.screen.height / 2 + safe : ypos
     );
 
     asteroid.rotation = Math.random() * Math.PI * 2;
