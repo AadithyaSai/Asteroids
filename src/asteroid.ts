@@ -1,4 +1,10 @@
-import { Application, Graphics } from "pixi.js";
+import {
+  AnimatedSprite,
+  Application,
+  Rectangle,
+  Sprite,
+  Texture,
+} from "pixi.js";
 import { AsteroidType } from "./utils/types";
 
 let count = 5; // Initial number of asteroids
@@ -9,7 +15,7 @@ export function incAsteroidCount() {
 
 export function createAsteroids(app: Application, asteroids: AsteroidType[]) {
   for (let i = 0; i < count; i++) {
-    const asteroid = createAsteroid(4);
+    const asteroid = createAsteroid(3);
 
     const safe = 100; // Safe distance from the ship. 200/2
     const xpos = Math.random() * (app.screen.width / 2 - safe);
@@ -25,17 +31,20 @@ export function createAsteroids(app: Application, asteroids: AsteroidType[]) {
     let heading = Math.random() * Math.PI * 2;
 
     app.stage.addChild(asteroid);
-    asteroids.push({ asteroid, size: 4, heading: heading });
+    asteroids.push({ asteroid, size: 3, heading: heading });
   }
 }
 
 function createAsteroid(scale: number) {
-  const asteroid = new Graphics();
-  asteroid.poly([-5, -5, 5, -5, 5, 5, -5, 5]);
-  asteroid.closePath();
-  asteroid.fill("0xffffff");
-  asteroid.stroke({ width: 1 / scale, color: "0xffffff" });
-  asteroid.scale.set(scale);
+  let asteroid;
+  if (scale == 3) {
+    asteroid = Sprite.from("bigAsteroid");
+  } else if (scale == 2) {
+    asteroid = Sprite.from("medAsteroid");
+  } else {
+    asteroid = Sprite.from("smallAsteroid");
+  }
+  asteroid.anchor.set(0.5);
 
   return asteroid;
 }
@@ -48,17 +57,17 @@ export function animateAsteroids(app: Application, asteroids: AsteroidType[]) {
     asteroid.position.x += speed * Math.cos(heading);
     asteroid.position.y += speed * Math.sin(heading);
 
-    if (asteroid.position.x > app.screen.width + 5) {
-      asteroid.position.x = -5;
+    if (asteroid.position.x > app.screen.width + asteroid.width / 2) {
+      asteroid.position.x = -asteroid.width / 2;
     }
-    if (asteroid.position.x < -5) {
-      asteroid.position.x = app.screen.width + 5;
+    if (asteroid.position.x < -asteroid.width / 2) {
+      asteroid.position.x = app.screen.width + asteroid.width / 2;
     }
-    if (asteroid.position.y > app.screen.height + 5) {
-      asteroid.position.y = -5;
+    if (asteroid.position.y > app.screen.height + asteroid.height / 2) {
+      asteroid.position.y = -asteroid.height / 2;
     }
-    if (asteroid.position.y < -5) {
-      asteroid.position.y = app.screen.height + 5;
+    if (asteroid.position.y < -asteroid.height / 2) {
+      asteroid.position.y = app.screen.height + asteroid.height / 2;
     }
   }
 }
@@ -68,6 +77,24 @@ export function splitAsteroid(
   asteroids: AsteroidType[],
   index: number
 ) {
+  const explosionTextures: Texture[] = [];
+  const explosionBase = Texture.from("explosionbase");
+  for (let i = 1; i <= 64; i++) {
+    explosionTextures.push(
+      new Texture({
+        source: explosionBase.source,
+        frame: new Rectangle((i % 8) * 512, Math.floor(i / 8) * 512, 512, 512),
+      })
+    );
+  }
+  const explosion = new AnimatedSprite(explosionTextures);
+  explosion.anchor.set(0.5);
+  explosion.position.set(
+    asteroids[index].asteroid.position.x,
+    asteroids[index].asteroid.position.y
+  );
+  explosion.loop = false;
+
   const asteroid = asteroids[index].asteroid;
   const size = asteroids[index].size;
 
@@ -75,7 +102,7 @@ export function splitAsteroid(
   let heading = Math.random() * Math.PI * 2;
   if (size > 1) {
     for (let i = 0; i < 2; i++) {
-      const newAsteroid = createAsteroid(size / 2);
+      const newAsteroid = createAsteroid(size - 1);
 
       newAsteroid.position.set(asteroid.position.x, asteroid.position.y);
       newAsteroid.rotation = Math.random() * Math.PI * 2;
@@ -83,7 +110,7 @@ export function splitAsteroid(
       app.stage.addChild(newAsteroid);
       asteroids.push({
         asteroid: newAsteroid,
-        size: size / 2,
+        size: size - 1,
         heading: heading + dir[i],
       });
     }
@@ -91,4 +118,7 @@ export function splitAsteroid(
 
   app.stage.removeChild(asteroid);
   asteroids.splice(index, 1);
+
+  app.stage.addChild(explosion);
+  explosion.play();
 }

@@ -1,4 +1,4 @@
-import { Application } from "pixi.js";
+import { Application, Assets, Texture, TilingSprite } from "pixi.js";
 import { animateShip, createShip, resetShipData } from "./ship";
 import { animateAsteroids, createAsteroids } from "./asteroid";
 import { AsteroidType, BulletType } from "./utils/types";
@@ -48,8 +48,33 @@ async function setup() {
   return app;
 }
 
+async function preload() {
+  const assets = [
+    { alias: "ship", src: "assets/png/ship.png" },
+    { alias: "shiptrail", src: "assets/png/shiptrail.png" },
+    { alias: "bullet", src: "assets/png/bullet.png" },
+    { alias: "bigAsteroid", src: "assets/png/asteroid_big.png" },
+    { alias: "medAsteroid", src: "assets/png/asteroid_med.png" },
+    { alias: "smallAsteroid", src: "assets/png/asteroid_small.png" },
+    { alias: "background", src: "assets/png/background.png" },
+    { alias: "explosionbase", src: "assets/png/explosions.png" },
+  ];
+
+  await Assets.load(assets);
+  console.log("Assets loaded");
+}
+
 export async function startGame() {
   const app = await setup();
+  await preload();
+
+  const bg = Texture.from("background");
+  const bgTiles = new TilingSprite({
+    texture: bg,
+    width: app.screen.width,
+    height: app.screen.height,
+  });
+  app.stage.addChild(bgTiles);
 
   let asteroids: AsteroidType[] = [];
   let bullets: BulletType[] = [];
@@ -58,8 +83,10 @@ export async function startGame() {
   createAsteroids(app, asteroids);
 
   // Add the animation callbacks to the application's ticker.
-  app.ticker.add(() => {
+  app.ticker.add((tick) => {
+    tick.maxFPS = 60;
     animateShip(app, ship, keyFlags, bullets);
+
     animateAsteroids(app, asteroids);
     animateBullets(app, bullets);
 

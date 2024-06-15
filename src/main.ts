@@ -18,5 +18,4 @@ startButtons.forEach((btn) => {
 window.addEventListener("gameover", () => {
   gameDiv.classList.add("hide");
   endDiv.classList.remove("hide");
-  console.log("Game Over");
 });

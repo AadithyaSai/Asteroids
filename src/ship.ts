@@ -1,16 +1,18 @@
-import { Application, Graphics, Point } from "pixi.js";
+import { Application, Point, Sprite } from "pixi.js";
 import fireBullet from "./bullet";
 import { BulletType } from "./utils/types";
 
 export function createShip(app: Application) {
-  const ship = new Graphics();
-  ship.lineTo(50, 25);
-  ship.lineTo(0, 50);
-  ship.lineTo(0, 0);
-  ship.stroke({ width: 1, color: "0xffffff" });
+  const ship = Sprite.from("ship");
 
   ship.position.set(app.screen.width / 2, app.screen.height / 2);
-  ship.pivot.set(16.66, 25); // centroid
+  ship.anchor.set(0.5);
+
+  const shipTrail = Sprite.from("shiptrail");
+  shipTrail.anchor.set(0.5);
+  shipTrail.position.set(-ship.width / 2 - 10, 0);
+  shipTrail.visible = false;
+  ship.addChild(shipTrail);
 
   app.stage.addChild(ship);
 
@@ -31,7 +33,7 @@ export function resetShipData() {
 
 export function animateShip(
   app: Application,
-  ship: Graphics,
+  ship: Sprite,
   keyFlags: Map<string, boolean>,
   bullets: BulletType[]
 ) {
@@ -40,6 +42,7 @@ export function animateShip(
   }
 
   if (keyFlags.get("ArrowUp") || keyFlags.get("w")) {
+    ship.children[0].visible = true;
     dx += 0.05 * Math.cos(ship.rotation);
     dy += 0.05 * Math.sin(ship.rotation);
     if (dx > maxSpeed) dx = maxSpeed;
@@ -47,6 +50,7 @@ export function animateShip(
     if (dx < -maxSpeed) dx = -maxSpeed;
     if (dy < -maxSpeed) dy = -maxSpeed;
   } else {
+    ship.children[0].visible = false;
     dx *= 0.99;
     dy *= 0.99;
   }
@@ -64,31 +68,31 @@ export function animateShip(
   ship.position.x += dx;
   ship.position.y += dy;
 
-  if (ship.position.x > app.screen.width + 25) {
-    ship.position.x = -25;
+  if (ship.position.x > app.screen.width + ship.width / 2) {
+    ship.position.x = -ship.width / 2;
   }
-  if (ship.position.x < -25) {
-    ship.position.x = app.screen.width + 25;
+  if (ship.position.x < -ship.width / 2) {
+    ship.position.x = app.screen.width + ship.width / 2;
   }
-  if (ship.position.y > app.screen.height + 25) {
-    ship.position.y = -25;
+  if (ship.position.y > app.screen.height + ship.height / 2) {
+    ship.position.y = -ship.height / 2;
   }
-  if (ship.position.y < -25) {
-    ship.position.y = app.screen.height + 25;
+  if (ship.position.y < -ship.height / 2) {
+    ship.position.y = app.screen.height + ship.height / 2;
   }
 
   if (keyFlags.get(" ")) {
     if (new Date().getTime() - lastShot > 300) {
       lastShot = new Date().getTime();
 
-      const pos = new Point(ship.height, ship.width / 2);
+      const pos = new Point(ship.width / 2, 0);
 
       fireBullet(app, ship.toGlobal(pos), ship.rotation, bullets);
     }
   }
 }
 
-export function destroyShip(_app: Application, ship: Graphics) {
+export function destroyShip(_app: Application, ship: Sprite) {
   ship.visible = false;
 
   // setTimeout(() => {

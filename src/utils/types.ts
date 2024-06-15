@@ -1,12 +1,12 @@
-import { Graphics } from "pixi.js";
+import { Sprite } from "pixi.js";
 
 export type AsteroidType = {
-  asteroid: Graphics;
+  asteroid: Sprite;
   size: number;
   heading: number;
 };
 
 export type BulletType = {
-  bullet: Graphics;
+  bullet: Sprite;
   enemy: boolean;
 };

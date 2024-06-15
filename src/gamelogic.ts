@@ -1,12 +1,12 @@
-import { Application, Graphics } from "pixi.js";
+import { Application, Sprite } from "pixi.js";
 import { AsteroidType, BulletType } from "./utils/types";
-import { collisionCheck, explode } from "./utils/common";
+import { collisionCheck } from "./utils/common";
 import { createAsteroids, splitAsteroid } from "./asteroid";
 import { destroyShip } from "./ship";
 
 export function updateGameLogic(
   app: Application,
-  ship: Graphics,
+  ship: Sprite,
   asteroids: AsteroidType[],
   bullets: BulletType[]
 ) {
@@ -20,7 +20,7 @@ export function updateGameLogic(
 
 function checkShipCollision(
   app: Application,
-  ship: Graphics,
+  ship: Sprite,
   asteroids: AsteroidType[]
 ) {
   for (let i = 0; i < asteroids.length; i++) {
@@ -28,7 +28,6 @@ function checkShipCollision(
     if (ship.visible) {
       if (collisionCheck(asteroid, ship)) {
         destroyShip(app, ship);
-        explode(app, asteroid.position);
         splitAsteroid(app, asteroids, i);
       }
     }
@@ -47,7 +46,6 @@ function checkBulletCollision(
         app.stage.removeChild(bullet);
         bullets.splice(j, 1);
         splitAsteroid(app, asteroids, i);
-        explode(app, asteroid.position);
       }
     }
   }

@@ -1,4 +1,4 @@
-import { Application, Graphics } from "pixi.js";
+import { Application, Sprite } from "pixi.js";
 import { GlowFilter } from "pixi-filters";
 import { BulletType } from "./utils/types";
 
@@ -10,13 +10,20 @@ export default function fireBullet(
   direction: number,
   bullets: BulletType[]
 ) {
-  const bullet = new Graphics();
-  bullet.circle(0, 0, 2);
-  bullet.fill("0xffffff");
+  const bullet = Sprite.from("bullet");
+  bullet.anchor.set(0.5);
   bullet.position.set(position.x, position.y);
   bullet.rotation = direction;
 
-  bullet.filters = [new GlowFilter()];
+  bullet.filters = [
+    new GlowFilter({
+      color: 0x0000ff,
+      distance: 15,
+      outerStrength: 1,
+      innerStrength: 0.5,
+      quality: 0.5,
+    }),
+  ];
 
   app.stage.addChild(bullet);
   bullets.push({ bullet, enemy: false });
