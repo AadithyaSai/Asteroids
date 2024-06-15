@@ -5,14 +5,14 @@ import { AsteroidType, BulletType } from "./utils/types";
 import { updateGameLogic } from "./gamelogic";
 import { animateBullets } from "./bullet";
 
-import ship from "../assets/png/ship.png";
-import shiptrail from "../assets/png/shiptrail.png";
-import bullet from "../assets/png/bullet.png";
-import bigAsteroid from "../assets/png/asteroid_big.png";
-import medAsteroid from "../assets/png/asteroid_med.png";
-import smallAsteroid from "../assets/png/asteroid_small.png";
-import background from "../assets/png/background.png";
-import explosionbase from "../assets/png/explosions.png";
+import ship from "./assets/png/ship.png";
+import shiptrail from "./assets/png/shiptrail.png";
+import bullet from "./assets/png/bullet.png";
+import bigAsteroid from "./assets/png/asteroid_big.png";
+import medAsteroid from "./assets/png/asteroid_med.png";
+import smallAsteroid from "./assets/png/asteroid_small.png";
+import background from "./assets/png/background.png";
+import explosionbase from "./assets/png/explosions.png";
 
 const keyFlags = new Map<string, boolean>();
 keyFlags.set("ArrowUp", false);
@@ -59,16 +59,26 @@ async function setup() {
 
 async function preload() {
   const assets = [
-    { name: "ship", url: ship },
-    { name: "shiptrail", url: shiptrail },
-    { name: "bullet", url: bullet },
-    { name: "bigAsteroid", url: bigAsteroid },
-    { name: "medAsteroid", url: medAsteroid },
-    { name: "smallAsteroid", url: smallAsteroid },
-    { name: "background", url: background },
-    { name: "explosionbase", url: explosionbase },
+    { alias: "ship", src: ship },
+    { alias: "shiptrail", src: shiptrail },
+    { alias: "bullet", src: bullet },
+    { alias: "bigAsteroid", src: bigAsteroid },
+    { alias: "medAsteroid", src: medAsteroid },
+    { alias: "smallAsteroid", src: smallAsteroid },
+    { alias: "background", src: background },
+    { alias: "explosionbase", src: explosionbase },
   ];
 
+  console.log(
+    ship,
+    shiptrail,
+    bullet,
+    bigAsteroid,
+    medAsteroid,
+    smallAsteroid,
+    background,
+    explosionbase
+  );
   await Assets.load(assets);
   console.log("Assets loaded");
 }
