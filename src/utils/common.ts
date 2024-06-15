@@ -1,4 +1,4 @@
-import { Application, Container, Graphics, Point } from "pixi.js";
+import { Container, Point } from "pixi.js";
 
 function distanceBetween(obj1: Point, obj2: Point) {
   return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));

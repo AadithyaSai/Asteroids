@@ -5,6 +5,15 @@ import { AsteroidType, BulletType } from "./utils/types";
 import { updateGameLogic } from "./gamelogic";
 import { animateBullets } from "./bullet";
 
+import ship from "../assets/png/ship.png";
+import shiptrail from "../assets/png/shiptrail.png";
+import bullet from "../assets/png/bullet.png";
+import bigAsteroid from "../assets/png/asteroid_big.png";
+import medAsteroid from "../assets/png/asteroid_med.png";
+import smallAsteroid from "../assets/png/asteroid_small.png";
+import background from "../assets/png/background.png";
+import explosionbase from "../assets/png/explosions.png";
+
 const keyFlags = new Map<string, boolean>();
 keyFlags.set("ArrowUp", false);
 keyFlags.set("ArrowDown", false);
@@ -50,14 +59,14 @@ async function setup() {
 
 async function preload() {
   const assets = [
-    { alias: "ship", src: "assets/png/ship.png" },
-    { alias: "shiptrail", src: "assets/png/shiptrail.png" },
-    { alias: "bullet", src: "assets/png/bullet.png" },
-    { alias: "bigAsteroid", src: "assets/png/asteroid_big.png" },
-    { alias: "medAsteroid", src: "assets/png/asteroid_med.png" },
-    { alias: "smallAsteroid", src: "assets/png/asteroid_small.png" },
-    { alias: "background", src: "assets/png/background.png" },
-    { alias: "explosionbase", src: "assets/png/explosions.png" },
+    { name: "ship", url: ship },
+    { name: "shiptrail", url: shiptrail },
+    { name: "bullet", url: bullet },
+    { name: "bigAsteroid", url: bigAsteroid },
+    { name: "medAsteroid", url: medAsteroid },
+    { name: "smallAsteroid", url: smallAsteroid },
+    { name: "background", url: background },
+    { name: "explosionbase", url: explosionbase },
   ];
 
   await Assets.load(assets);
