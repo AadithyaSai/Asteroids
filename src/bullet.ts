@@ -30,7 +30,7 @@ export default function fireBullet(
 }
 
 export function animateBullets(app: Application, bullets: BulletType[]) {
-  const speed = 5;
+  const speed = 7;
 
   for (let i = 0; i < bullets.length; i++) {
     const bullet = bullets[i].bullet;

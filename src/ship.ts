@@ -20,13 +20,13 @@ export function createShip(app: Application) {
   return ship;
 }
 
-let maxSpeed = 3;
+let maxSpeed = 5;
 let dx = 0;
 let dy = 0;
 let lastShot = new Date().getTime();
 
 export function resetShipData() {
-  maxSpeed = 3;
+  maxSpeed = 5;
   dx = 0;
   dy = 0;
   lastShot = new Date().getTime();
@@ -45,8 +45,8 @@ export function animateShip(
   if (keyFlags.get("ArrowUp") || keyFlags.get("w")) {
     sound.play("thrust");
     ship.children[0].visible = true;
-    dx += 0.05 * Math.cos(ship.rotation);
-    dy += 0.05 * Math.sin(ship.rotation);
+    dx += 0.1 * Math.cos(ship.rotation);
+    dy += 0.1 * Math.sin(ship.rotation);
     if (dx > maxSpeed) dx = maxSpeed;
     if (dy > maxSpeed) dy = maxSpeed;
     if (dx < -maxSpeed) dx = -maxSpeed;
@@ -58,10 +58,10 @@ export function animateShip(
     dy *= 0.99;
   }
   if (keyFlags.get("ArrowLeft") || keyFlags.get("a")) {
-    ship.rotation -= 0.02;
+    ship.rotation -= 0.03;
   }
   if (keyFlags.get("ArrowRight") || keyFlags.get("d")) {
-    ship.rotation += 0.02;
+    ship.rotation += 0.03;
   }
   if (keyFlags.get("ArrowDown") || keyFlags.get("s")) {
     // TODO: wormhole

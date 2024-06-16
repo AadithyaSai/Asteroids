@@ -5,21 +5,9 @@ import { animateAsteroids, createAsteroids } from "./asteroid";
 import { AsteroidType, BulletType } from "./utils/types";
 import { updateGameLogic } from "./gamelogic";
 import { animateBullets } from "./bullet";
+import { initVFX } from "./utils/vfx";
 
-import ship from "./assets/png/ship.png";
-import shiptrail from "./assets/png/shiptrail.png";
-import bullet from "./assets/png/bullet.png";
-import bigAsteroid from "./assets/png/asteroid_big.png";
-import medAsteroid from "./assets/png/asteroid_med.png";
-import smallAsteroid from "./assets/png/asteroid_small.png";
-import background from "./assets/png/background.png";
-import explosionbase from "./assets/png/explosions.png";
-
-import bgm from "./assets/sounds/bgm.ogg";
-import explosion from "./assets/sounds/explosion.wav";
-import shoot from "./assets/sounds/shoot.wav";
-import shipExplosion from "./assets/sounds/shipexplosion.flac";
-import thrust from "./assets/sounds/thrust.wav";
+import { files } from "./assetlist";
 
 const keyFlags = new Map<string, boolean>();
 keyFlags.set("ArrowUp", false);
@@ -66,23 +54,46 @@ async function setup() {
 
 async function preload() {
   const assets = [
-    { alias: "ship", src: ship },
-    { alias: "shiptrail", src: shiptrail },
-    { alias: "bullet", src: bullet },
-    { alias: "bigAsteroid", src: bigAsteroid },
-    { alias: "medAsteroid", src: medAsteroid },
-    { alias: "smallAsteroid", src: smallAsteroid },
-    { alias: "background", src: background },
-    { alias: "explosionbase", src: explosionbase },
+    { alias: "ship", src: files.ship },
+    { alias: "shiptrail", src: files.shiptrail },
+    { alias: "bullet", src: files.bullet },
+    { alias: "background", src: files.background },
+    { alias: "explosionbase", src: files.explosionbase },
+    { alias: "meteorBrown_big1", src: files.meteorBrown_big1 },
+    { alias: "meteorBrown_big2", src: files.meteorBrown_big2 },
+    { alias: "meteorBrown_big3", src: files.meteorBrown_big3 },
+    { alias: "meteorBrown_big4", src: files.meteorBrown_big4 },
+    { alias: "meteorBrown_med1", src: files.meteorBrown_med1 },
+    { alias: "meteorBrown_med2", src: files.meteorBrown_med2 },
+    { alias: "meteorBrown_small1", src: files.meteorBrown_small1 },
+    { alias: "meteorBrown_small2", src: files.meteorBrown_small2 },
+    { alias: "meteorGrey_big1", src: files.meteorGrey_big1 },
+    { alias: "meteorGrey_big2", src: files.meteorGrey_big2 },
+    { alias: "meteorGrey_big3", src: files.meteorGrey_big3 },
+    { alias: "meteorGrey_big4", src: files.meteorGrey_big4 },
+    { alias: "meteorGrey_med1", src: files.meteorGrey_med1 },
+    { alias: "meteorGrey_med2", src: files.meteorGrey_med2 },
+    { alias: "meteorGrey_small1", src: files.meteorGrey_small1 },
+    { alias: "meteorGrey_small2", src: files.meteorGrey_small2 },
   ];
 
   await Assets.load(assets);
 
-  sound.add("bgm", bgm);
-  sound.add("explosion", explosion);
-  sound.add("shoot", shoot);
-  sound.add("shipExplosion", shipExplosion);
-  sound.add("thrust", thrust);
+  if (!sound.exists("bgm")) {
+    sound.add("bgm", files.bgm);
+  }
+  if (!sound.exists("explosion")) {
+    sound.add("explosion", files.explosion);
+  }
+  if (!sound.exists("shoot")) {
+    sound.add("shoot", files.shoot);
+  }
+  if (!sound.exists("shipExplosion")) {
+    sound.add("shipExplosion", files.shipExplosion);
+  }
+  if (!sound.exists("thrust")) {
+    sound.add("thrust", files.thrust);
+  }
 }
 
 export async function startGame() {
@@ -98,6 +109,8 @@ export async function startGame() {
     height: app.screen.height,
   });
   app.stage.addChild(bgTiles);
+
+  initVFX(app);
 
   let asteroids: AsteroidType[] = [];
   let bullets: BulletType[] = [];
@@ -117,7 +130,7 @@ export async function startGame() {
 
     if (ship.visible === false) {
       window.dispatchEvent(new Event("gameover"));
-      sound.stop("bgm");
+      sound.stopAll();
       resetShipData();
       app.destroy();
     }

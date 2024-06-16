@@ -4,6 +4,8 @@ export type AsteroidType = {
   asteroid: Sprite;
   size: number;
   heading: number;
+  spin: number;
+  color: string;
 };
 
 export type BulletType = {

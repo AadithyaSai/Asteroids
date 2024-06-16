@@ -1,14 +1,15 @@
-import {
-  AnimatedSprite,
-  Application,
-  Rectangle,
-  Sprite,
-  Texture,
-} from "pixi.js";
+import { Application, Sprite } from "pixi.js";
 import { AsteroidType } from "./utils/types";
 import { sound } from "@pixi/sound";
+import { playExplosion } from "./utils/vfx";
 
 let count = 5; // Initial number of asteroids
+
+const bigAsteroids = 4;
+const medAsteroids = 2;
+const smallAsteroids = 2;
+const asteroidSizes = ["big", "med", "small"];
+const asteroidColors = ["Grey", "Brown"];
 
 export function incAsteroidCount() {
   count++;
@@ -16,45 +17,60 @@ export function incAsteroidCount() {
 
 export function createAsteroids(app: Application, asteroids: AsteroidType[]) {
   for (let i = 0; i < count; i++) {
-    const asteroid = createAsteroid(3);
+    const asteroidData = createAsteroid(0);
 
     const safe = 100; // Safe distance from the ship. 200/2
     const xpos = Math.random() * (app.screen.width / 2 - safe);
     const ypos = Math.random() * (app.screen.height / 2 - safe);
 
-    asteroid.position.set(
+    asteroidData.asteroid.position.set(
       Math.random() > 0.5 ? xpos + app.screen.width / 2 + safe : xpos,
       Math.random() > 0.5 ? ypos + app.screen.height / 2 + safe : ypos
     );
 
-    asteroid.rotation = Math.random() * Math.PI * 2;
-
-    let heading = Math.random() * Math.PI * 2;
-
-    app.stage.addChild(asteroid);
-    asteroids.push({ asteroid, size: 3, heading: heading });
+    app.stage.addChild(asteroidData.asteroid);
+    asteroids.push(asteroidData);
   }
 }
 
-function createAsteroid(scale: number) {
-  let asteroid;
-  if (scale == 3) {
-    asteroid = Sprite.from("bigAsteroid");
-  } else if (scale == 2) {
-    asteroid = Sprite.from("medAsteroid");
-  } else {
-    asteroid = Sprite.from("smallAsteroid");
-  }
-  asteroid.anchor.set(0.5);
+function createAsteroid(size: number, color?: string) {
+  let asteroidColor = color
+    ? color
+    : asteroidColors[Math.floor(Math.random() * 2)];
+  let asteroidSize = asteroidSizes[size];
 
-  return asteroid;
+  let type: number;
+  if (size == 0) {
+    type = Math.floor(Math.random() * bigAsteroids);
+  } else if (size == 1) {
+    type = Math.floor(Math.random() * medAsteroids);
+  } else {
+    type = Math.floor(Math.random() * smallAsteroids);
+  }
+  const asteroid = Sprite.from(
+    `meteor${asteroidColor}_${asteroidSize}${type + 1}`
+  );
+  console.log(`meteor${asteroidColor}_${asteroidSize}${type + 1}`);
+  asteroid.anchor.set(0.5);
+  asteroid.rotation = Math.random() * Math.PI * 2;
+
+  let heading = Math.random() * Math.PI * 2;
+  let spin = Math.random() * 0.01 - 0.005;
+
+  return {
+    asteroid,
+    size,
+    heading: heading,
+    spin: spin,
+    color: asteroidColor,
+  };
 }
 
 export function animateAsteroids(app: Application, asteroids: AsteroidType[]) {
   for (let i = 0; i < asteroids.length; i++) {
     const asteroid = asteroids[i].asteroid;
     const heading = asteroids[i].heading;
-    const speed = 2 / asteroids[i].size;
+    const speed = 0.8 + asteroids[i].size * 1.2;
     asteroid.position.x += speed * Math.cos(heading);
     asteroid.position.y += speed * Math.sin(heading);
 
@@ -70,6 +86,8 @@ export function animateAsteroids(app: Application, asteroids: AsteroidType[]) {
     if (asteroid.position.y < -asteroid.height / 2) {
       asteroid.position.y = app.screen.height + asteroid.height / 2;
     }
+
+    asteroid.rotation += asteroids[i].spin % (Math.PI * 2);
   }
 }
 
@@ -78,49 +96,28 @@ export function splitAsteroid(
   asteroids: AsteroidType[],
   index: number
 ) {
-  const explosionTextures: Texture[] = [];
-  const explosionBase = Texture.from("explosionbase");
-  for (let i = 1; i <= 64; i++) {
-    explosionTextures.push(
-      new Texture({
-        source: explosionBase.source,
-        frame: new Rectangle((i % 8) * 512, Math.floor(i / 8) * 512, 512, 512),
-      })
-    );
-  }
-  const explosion = new AnimatedSprite(explosionTextures);
-  explosion.anchor.set(0.5);
-  explosion.position.set(
-    asteroids[index].asteroid.position.x,
-    asteroids[index].asteroid.position.y
-  );
-  explosion.loop = false;
-
   const asteroid = asteroids[index].asteroid;
   const size = asteroids[index].size;
+  const color = asteroids[index].color;
 
+  const pos = { x: asteroid.position.x, y: asteroid.position.y };
   const dir = [0, Math.PI];
   let heading = Math.random() * Math.PI * 2;
-  if (size > 1) {
+  console.log(asteroids[index].size);
+  if (size < asteroidSizes.length - 1) {
     for (let i = 0; i < 2; i++) {
-      const newAsteroid = createAsteroid(size - 1);
+      const newAsteroidData = createAsteroid(size + 1, color);
+      newAsteroidData.heading = heading + dir[i];
 
-      newAsteroid.position.set(asteroid.position.x, asteroid.position.y);
-      newAsteroid.rotation = Math.random() * Math.PI * 2;
+      newAsteroidData.asteroid.position.set(pos.x, pos.y);
 
-      app.stage.addChild(newAsteroid);
-      asteroids.push({
-        asteroid: newAsteroid,
-        size: size - 1,
-        heading: heading + dir[i],
-      });
+      app.stage.addChild(newAsteroidData.asteroid);
+      asteroids.push(newAsteroidData);
     }
   }
 
   app.stage.removeChild(asteroid);
   asteroids.splice(index, 1);
-
-  app.stage.addChild(explosion);
-  explosion.play();
+  playExplosion(pos.x, pos.y);
   sound.play("explosion");
 }
