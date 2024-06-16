@@ -1,4 +1,5 @@
 import { Application, Assets, Texture, TilingSprite } from "pixi.js";
+import { sound } from "@pixi/sound";
 import { animateShip, createShip, resetShipData } from "./ship";
 import { animateAsteroids, createAsteroids } from "./asteroid";
 import { AsteroidType, BulletType } from "./utils/types";
@@ -13,6 +14,12 @@ import medAsteroid from "./assets/png/asteroid_med.png";
 import smallAsteroid from "./assets/png/asteroid_small.png";
 import background from "./assets/png/background.png";
 import explosionbase from "./assets/png/explosions.png";
+
+import bgm from "./assets/sounds/bgm.ogg";
+import explosion from "./assets/sounds/explosion.wav";
+import shoot from "./assets/sounds/shoot.wav";
+import shipExplosion from "./assets/sounds/shipexplosion.flac";
+import thrust from "./assets/sounds/thrust.wav";
 
 const keyFlags = new Map<string, boolean>();
 keyFlags.set("ArrowUp", false);
@@ -69,23 +76,20 @@ async function preload() {
     { alias: "explosionbase", src: explosionbase },
   ];
 
-  console.log(
-    ship,
-    shiptrail,
-    bullet,
-    bigAsteroid,
-    medAsteroid,
-    smallAsteroid,
-    background,
-    explosionbase
-  );
   await Assets.load(assets);
-  console.log("Assets loaded");
+
+  sound.add("bgm", bgm);
+  sound.add("explosion", explosion);
+  sound.add("shoot", shoot);
+  sound.add("shipExplosion", shipExplosion);
+  sound.add("thrust", thrust);
 }
 
 export async function startGame() {
   const app = await setup();
   await preload();
+
+  sound.play("bgm", { loop: true });
 
   const bg = Texture.from("background");
   const bgTiles = new TilingSprite({
@@ -113,6 +117,7 @@ export async function startGame() {
 
     if (ship.visible === false) {
       window.dispatchEvent(new Event("gameover"));
+      sound.stop("bgm");
       resetShipData();
       app.destroy();
     }

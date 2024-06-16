@@ -1,6 +1,7 @@
 import { Application, Point, Sprite } from "pixi.js";
 import fireBullet from "./bullet";
 import { BulletType } from "./utils/types";
+import { sound } from "@pixi/sound";
 
 export function createShip(app: Application) {
   const ship = Sprite.from("ship");
@@ -42,6 +43,7 @@ export function animateShip(
   }
 
   if (keyFlags.get("ArrowUp") || keyFlags.get("w")) {
+    sound.play("thrust");
     ship.children[0].visible = true;
     dx += 0.05 * Math.cos(ship.rotation);
     dy += 0.05 * Math.sin(ship.rotation);
@@ -50,6 +52,7 @@ export function animateShip(
     if (dx < -maxSpeed) dx = -maxSpeed;
     if (dy < -maxSpeed) dy = -maxSpeed;
   } else {
+    sound.stop("thrust");
     ship.children[0].visible = false;
     dx *= 0.99;
     dy *= 0.99;
@@ -88,12 +91,14 @@ export function animateShip(
       const pos = new Point(ship.width / 2, 0);
 
       fireBullet(app, ship.toGlobal(pos), ship.rotation, bullets);
+      sound.play("shoot");
     }
   }
 }
 
 export function destroyShip(_app: Application, ship: Sprite) {
   ship.visible = false;
+  sound.play("shipExplosion");
 
   // setTimeout(() => {
   //   ship.visible = true;

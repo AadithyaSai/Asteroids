@@ -6,6 +6,7 @@ import {
   Texture,
 } from "pixi.js";
 import { AsteroidType } from "./utils/types";
+import { sound } from "@pixi/sound";
 
 let count = 5; // Initial number of asteroids
 
@@ -121,4 +122,5 @@ export function splitAsteroid(
 
   app.stage.addChild(explosion);
   explosion.play();
+  sound.play("explosion");
 }
