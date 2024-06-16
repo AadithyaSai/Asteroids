@@ -18,4 +18,6 @@ startButtons.forEach((btn) => {
 window.addEventListener("gameover", () => {
   gameDiv.classList.add("hide");
   endDiv.classList.remove("hide");
+  document.getElementById("end-score")!.textContent! =
+    "Score: " + document.getElementById("score")!.textContent;
 });

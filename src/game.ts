@@ -118,6 +118,12 @@ export async function startGame() {
   let ship = createShip(app);
   createAsteroids(app, asteroids);
 
+  let score = 0;
+  const scoreSpan = document.createElement("span");
+  scoreSpan.id = "score";
+  scoreSpan.innerText = String(score).padStart(5, "0");
+  document.getElementById("game")!.appendChild(scoreSpan);
+
   // Add the animation callbacks to the application's ticker.
   app.ticker.add((tick) => {
     tick.maxFPS = 60;
@@ -126,7 +132,12 @@ export async function startGame() {
     animateAsteroids(app, asteroids);
     animateBullets(app, bullets);
 
-    updateGameLogic(app, ship, asteroids, bullets);
+    const scored = updateGameLogic(app, ship, asteroids, bullets);
+    if (scored) {
+      score += scored;
+      score = Math.min(score, 99999);
+      scoreSpan.innerText = String(score).padStart(5, "0");
+    }
 
     if (ship.visible === false) {
       window.dispatchEvent(new Event("gameover"));
