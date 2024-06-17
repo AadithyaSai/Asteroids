@@ -1,7 +1,7 @@
 import { Application, Sprite } from "pixi.js";
 import { AsteroidType } from "./utils/types";
 import { sound } from "@pixi/sound";
-import { playExplosion } from "./utils/vfx";
+import { playAsteroidExplosion } from "./utils/vfx";
 
 let count = 5; // Initial number of asteroids
 
@@ -50,7 +50,6 @@ function createAsteroid(size: number, color?: string) {
   const asteroid = Sprite.from(
     `meteor${asteroidColor}_${asteroidSize}${type + 1}`
   );
-  console.log(`meteor${asteroidColor}_${asteroidSize}${type + 1}`);
   asteroid.anchor.set(0.5);
   asteroid.rotation = Math.random() * Math.PI * 2;
 
@@ -103,7 +102,6 @@ export function splitAsteroid(
   const pos = { x: asteroid.position.x, y: asteroid.position.y };
   const dir = [0, Math.PI];
   let heading = Math.random() * Math.PI * 2;
-  console.log(asteroids[index].size);
   if (size < asteroidSizes.length - 1) {
     for (let i = 0; i < 2; i++) {
       const newAsteroidData = createAsteroid(size + 1, color);
@@ -118,6 +116,6 @@ export function splitAsteroid(
 
   app.stage.removeChild(asteroid);
   asteroids.splice(index, 1);
-  playExplosion(pos.x, pos.y);
+  playAsteroidExplosion(pos.x, pos.y);
   sound.play("explosion");
 }

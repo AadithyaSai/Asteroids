@@ -3,7 +3,7 @@ import { sound } from "@pixi/sound";
 import { animateShip, createShip, resetShipData } from "./ship";
 import { animateAsteroids, createAsteroids } from "./asteroid";
 import { AsteroidType, BulletType } from "./utils/types";
-import { updateGameLogic } from "./gamelogic";
+import { resetLives, updateGameLogic } from "./gamelogic";
 import { animateBullets } from "./bullet";
 import { initVFX } from "./utils/vfx";
 
@@ -112,6 +112,8 @@ export async function startGame() {
 
   initVFX(app);
 
+  resetLives();
+
   let asteroids: AsteroidType[] = [];
   let bullets: BulletType[] = [];
 
@@ -124,6 +126,11 @@ export async function startGame() {
   scoreSpan.innerText = String(score).padStart(5, "0");
   document.getElementById("game")!.appendChild(scoreSpan);
 
+  let livesSpan = document.createElement("span");
+  livesSpan.id = "lives";
+  livesSpan.innerText = "Lives: 3";
+  document.getElementById("game")!.appendChild(livesSpan);
+
   // Add the animation callbacks to the application's ticker.
   app.ticker.add((tick) => {
     tick.maxFPS = 60;
@@ -132,18 +139,28 @@ export async function startGame() {
     animateAsteroids(app, asteroids);
     animateBullets(app, bullets);
 
-    const scored = updateGameLogic(app, ship, asteroids, bullets);
-    if (scored) {
-      score += scored;
+    const update = updateGameLogic(app, ship, asteroids, bullets);
+    if (update.score) {
+      score += update.score;
       score = Math.min(score, 99999);
       scoreSpan.innerText = String(score).padStart(5, "0");
     }
-
-    if (ship.visible === false) {
-      window.dispatchEvent(new Event("gameover"));
-      sound.stopAll();
-      resetShipData();
-      app.destroy();
+    if (update.killed) {
+      sound.play("shipExplosion");
+      sound.stop("thrust");
+      livesSpan.innerText = `Lives: ${update.lives}`;
+      setTimeout(() => {
+        resetShipData();
+        app.stage.removeChild(ship);
+        ship.destroy();
+        if (update.lives > 0) {
+          ship = createShip(app);
+        } else {
+          sound.stopAll();
+          window.dispatchEvent(new Event("gameover"));
+          app.destroy();
+        }
+      }, 2000);
     }
   });
 }

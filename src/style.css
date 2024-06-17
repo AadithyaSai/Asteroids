@@ -60,6 +60,14 @@ h2 {
   font-size: 30px;
 }
 
+#lives {
+  position: absolute;
+  z-index: 100;
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+}
+
 @media (max-width: 600px) {
   h1 {
     font-size: 40px;

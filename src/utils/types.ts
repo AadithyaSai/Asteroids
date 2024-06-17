@@ -12,3 +12,9 @@ export type BulletType = {
   bullet: Sprite;
   enemy: boolean;
 };
+
+export type GameStateUpdate = {
+  score: number;
+  lives: number;
+  killed: boolean;
+};

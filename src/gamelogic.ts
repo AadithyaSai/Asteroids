@@ -1,16 +1,25 @@
 import { Application, Sprite } from "pixi.js";
-import { AsteroidType, BulletType } from "./utils/types";
+import { AsteroidType, BulletType, GameStateUpdate } from "./utils/types";
 import { collisionCheck } from "./utils/common";
 import { createAsteroids, incAsteroidCount, splitAsteroid } from "./asteroid";
 import { destroyShip } from "./ship";
+
+let lives = 3;
+
+export function resetLives() {
+  lives = 3;
+}
 
 export function updateGameLogic(
   app: Application,
   ship: Sprite,
   asteroids: AsteroidType[],
   bullets: BulletType[]
-) {
-  checkShipCollision(app, ship, asteroids);
+): GameStateUpdate {
+  let killed = checkShipCollision(app, ship, asteroids);
+  if (killed) {
+    lives--;
+  }
   let score = checkBulletCollision(app, asteroids, bullets);
 
   if (asteroids.length === 0) {
@@ -18,7 +27,7 @@ export function updateGameLogic(
     createAsteroids(app, asteroids);
   }
 
-  return score;
+  return { score, lives, killed };
 }
 
 function checkShipCollision(
@@ -26,15 +35,17 @@ function checkShipCollision(
   ship: Sprite,
   asteroids: AsteroidType[]
 ) {
-  for (let i = 0; i < asteroids.length; i++) {
-    const asteroid = asteroids[i].asteroid;
-    if (ship.visible) {
+  if (ship.visible) {
+    for (let i = 0; i < asteroids.length; i++) {
+      const asteroid = asteroids[i].asteroid;
       if (collisionCheck(asteroid, ship)) {
         destroyShip(app, ship);
         splitAsteroid(app, asteroids, i);
+        return true;
       }
     }
   }
+  return false;
 }
 function checkBulletCollision(
   app: Application,
@@ -62,4 +73,5 @@ function checkBulletCollision(
       }
     }
   }
+  return 0;
 }

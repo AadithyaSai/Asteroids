@@ -99,12 +99,4 @@ export function animateShip(
 export function destroyShip(_app: Application, ship: Sprite) {
   ship.visible = false;
   sound.play("shipExplosion");
-
-  // setTimeout(() => {
-  //   ship.visible = true;
-  //   dx = 0;
-  //   dy = 0;
-  //   ship.position.set(app.screen.width / 2, app.screen.height / 2);
-  //   ship.rotation = 0;
-  // }, 3000);
 }
