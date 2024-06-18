@@ -3,6 +3,8 @@ import { AsteroidType, BulletType, GameStateUpdate } from "./utils/types";
 import { collisionCheck } from "./utils/common";
 import { createAsteroids, incAsteroidCount, splitAsteroid } from "./asteroid";
 import { destroyShip } from "./ship";
+import { playAsteroidExplosion, playShipExplosion } from "./utils/vfx";
+import { sound } from "@pixi/sound";
 
 let lives = 3;
 
@@ -41,6 +43,9 @@ function checkShipCollision(
       if (collisionCheck(asteroid, ship)) {
         destroyShip(app, ship);
         splitAsteroid(app, asteroids, i);
+        playShipExplosion(ship.position.x, ship.position.y);
+        sound.stop("thrust");
+        sound.play("shipExplosion");
         return true;
       }
     }
@@ -61,6 +66,8 @@ function checkBulletCollision(
         app.stage.removeChild(bullet);
         bullets.splice(j, 1);
         splitAsteroid(app, asteroids, i);
+        playAsteroidExplosion(asteroid.position.x, asteroid.position.y);
+        sound.play("explosion");
 
         switch (size) {
           case 0:

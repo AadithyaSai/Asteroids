@@ -5,7 +5,7 @@ let shipExplosion: AnimatedSprite;
 
 export function initVFX(app: Application) {
   const asteroidExplosionTextures: Texture[] = [];
-  const asteroidExplosionBase = Texture.from("explosionbase");
+  const asteroidExplosionBase = Texture.from("asteroidexplosionbase");
   for (let i = 1; i <= 64; i++) {
     asteroidExplosionTextures.push(
       new Texture({
@@ -18,10 +18,30 @@ export function initVFX(app: Application) {
   asteroidExplosion.anchor.set(0.5);
   asteroidExplosion.loop = false;
 
+  const shipExplosionTextures: Texture[] = [];
+  const shipExplosionBase = Texture.from("shipexplosionbase");
+  for (let i = 1; i <= 64; i++) {
+    shipExplosionTextures.push(
+      new Texture({
+        source: shipExplosionBase.source,
+        frame: new Rectangle((i % 8) * 512, Math.floor(i / 8) * 512, 512, 512),
+      })
+    );
+  }
+  shipExplosion = new AnimatedSprite(shipExplosionTextures);
+  shipExplosion.anchor.set(0.5);
+  shipExplosion.loop = false;
+
   app.stage.addChild(asteroidExplosion);
+  app.stage.addChild(shipExplosion);
 }
 
 export function playAsteroidExplosion(x: number, y: number) {
   asteroidExplosion.position.set(x, y);
   asteroidExplosion.gotoAndPlay(0);
+}
+
+export function playShipExplosion(x: number, y: number) {
+  shipExplosion.position.set(x, y);
+  shipExplosion.gotoAndPlay(0);
 }

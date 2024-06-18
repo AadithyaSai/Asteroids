@@ -17,12 +17,29 @@
     <link rel="stylesheet" href="src/style.css" />
   </head>
   <body>
-    <div id="start" class="overlapping fullscreen">
+    <div id="start" class="overlapping fullscreen dark flex">
       <h1>Asteroids!</h1>
       <button class="start-button">Start!</button>
     </div>
-    <div id="game" class="overlapping fullscreen hide"></div>
-    <div id="end" class="overlapping fullscreen hide">
+    <div id="game" class="overlapping fullscreen hide">
+      <div id="game-mobile-overlay" class="overlapping fullscreen">
+        <button id="left">
+          <img src="src/assets/image/Left Button.png" alt="" />
+        </button>
+        <button id="right">
+          <img src="src/assets/image/Right Button.png" alt="" />
+        </button>
+        <button id="fire">
+          <img src="src/assets/image/Shoot Button.png" alt="" />
+        </button>
+        <button id="forward">
+          <img src="src/assets/image/Up Button.png" alt="" />
+        </button>
+      </div>
+      <div id="game-canvas" class="overlapping fullscreen dark flex"></div>
+    </div>
+
+    <div id="end" class="overlapping fullscreen dark flex hide">
       <h1>Game Over!</h1>
       <h2 id="end-score"></h2>
       <button class="start-button">Restart!</button>

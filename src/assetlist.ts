@@ -2,7 +2,8 @@ import ship from "./assets/image/ship.png";
 import shiptrail from "./assets/image/shiptrail.png";
 import bullet from "./assets/image/bullet.png";
 import background from "./assets/image/background.png";
-import explosionbase from "./assets/image/explosions.png";
+import asteroidexplosionbase from "./assets/image/asteroidExplosionSheet.png";
+import shipexplosionbase from "./assets/image/shipExplosionSheet.png";
 
 import meteorBrown_big1 from "./assets/image/meteorBrown_big1.png";
 import meteorBrown_big2 from "./assets/image/meteorBrown_big2.png";
@@ -24,7 +25,7 @@ import meteorGrey_small2 from "./assets/image/meteorGrey_small2.png";
 import bgm from "./assets/sounds/bgm.ogg";
 import explosion from "./assets/sounds/explosion.wav";
 import shoot from "./assets/sounds/shoot.wav";
-import shipExplosion from "./assets/sounds/shipexplosion.flac";
+import shipExplosion from "./assets/sounds/shipexplosion.wav";
 import thrust from "./assets/sounds/thrust.wav";
 
 export const files = {
@@ -32,7 +33,8 @@ export const files = {
   shiptrail,
   bullet,
   background,
-  explosionbase,
+  asteroidexplosionbase,
+  shipexplosionbase,
   meteorBrown_big1,
   meteorBrown_big2,
   meteorBrown_big3,

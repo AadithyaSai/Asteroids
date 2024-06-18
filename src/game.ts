@@ -44,8 +44,8 @@ async function setup() {
     autoDensity: true,
     resolution: 2,
   });
-  document.getElementById("game")!.innerHTML = "";
-  document.getElementById("game")!.appendChild(app.canvas);
+  document.getElementById("game-canvas")!.innerHTML = "";
+  document.getElementById("game-canvas")!.appendChild(app.canvas);
 
   console.log("PIXI Application setup complete");
 
@@ -58,7 +58,8 @@ async function preload() {
     { alias: "shiptrail", src: files.shiptrail },
     { alias: "bullet", src: files.bullet },
     { alias: "background", src: files.background },
-    { alias: "explosionbase", src: files.explosionbase },
+    { alias: "asteroidexplosionbase", src: files.asteroidexplosionbase },
+    { alias: "shipexplosionbase", src: files.shipexplosionbase },
     { alias: "meteorBrown_big1", src: files.meteorBrown_big1 },
     { alias: "meteorBrown_big2", src: files.meteorBrown_big2 },
     { alias: "meteorBrown_big3", src: files.meteorBrown_big3 },
@@ -131,7 +132,6 @@ export async function startGame() {
   livesSpan.innerText = "Lives: 3";
   document.getElementById("game")!.appendChild(livesSpan);
 
-  // Add the animation callbacks to the application's ticker.
   app.ticker.add((tick) => {
     tick.maxFPS = 60;
     animateShip(app, ship, keyFlags, bullets);
@@ -146,8 +146,6 @@ export async function startGame() {
       scoreSpan.innerText = String(score).padStart(5, "0");
     }
     if (update.killed) {
-      sound.play("shipExplosion");
-      sound.stop("thrust");
       livesSpan.innerText = `Lives: ${update.lives}`;
       setTimeout(() => {
         resetShipData();

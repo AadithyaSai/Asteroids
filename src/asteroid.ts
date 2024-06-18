@@ -1,7 +1,5 @@
 import { Application, Sprite } from "pixi.js";
 import { AsteroidType } from "./utils/types";
-import { sound } from "@pixi/sound";
-import { playAsteroidExplosion } from "./utils/vfx";
 
 let count = 5; // Initial number of asteroids
 
@@ -116,6 +114,4 @@ export function splitAsteroid(
 
   app.stage.removeChild(asteroid);
   asteroids.splice(index, 1);
-  playAsteroidExplosion(pos.x, pos.y);
-  sound.play("explosion");
 }

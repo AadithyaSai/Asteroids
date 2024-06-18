@@ -26,7 +26,13 @@ body {
 .fullscreen {
   width: 100vw;
   height: 100vh;
+}
+
+.dark {
   background-color: #000;
+}
+
+.flex {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -68,7 +74,51 @@ h2 {
   font-size: 30px;
 }
 
+#game-mobile-overlay {
+  display: none;
+  z-index: 100;
+  pointer-events: none;
+}
+
+#game-mobile-overlay button {
+  font-size: 20px;
+  border: none;
+  background-color: transparent;
+}
+
+#left,
+#right,
+#fire,
+#forward {
+  pointer-events: all;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+#left {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+}
+#right {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+}
+#forward {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+}
+#fire {
+  position: absolute;
+  bottom: 5%;
+  left: 25%;
+}
 @media (max-width: 600px) {
+  #game-mobile-overlay {
+    display: block;
+  }
   h1 {
     font-size: 40px;
   }
