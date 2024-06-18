@@ -1,8 +1,8 @@
 import { Application, Sprite } from "pixi.js";
-import { AsteroidType, BulletType, GameStateUpdate } from "./utils/types";
+import { AsteroidType, BulletType, GameStateChanges } from "./utils/types";
 import { collisionCheck } from "./utils/common";
 import { createAsteroids, incAsteroidCount, splitAsteroid } from "./asteroid";
-import { destroyShip } from "./ship";
+import { destroyShip, isInvulnerable } from "./ship";
 import { playAsteroidExplosion, playShipExplosion } from "./utils/vfx";
 import { sound } from "@pixi/sound";
 
@@ -17,7 +17,7 @@ export function updateGameLogic(
   ship: Sprite,
   asteroids: AsteroidType[],
   bullets: BulletType[]
-): GameStateUpdate {
+): GameStateChanges {
   let killed = checkShipCollision(app, ship, asteroids);
   if (killed) {
     lives--;
@@ -37,11 +37,11 @@ function checkShipCollision(
   ship: Sprite,
   asteroids: AsteroidType[]
 ) {
-  if (ship.visible) {
+  if (ship.visible && !isInvulnerable()) {
     for (let i = 0; i < asteroids.length; i++) {
       const asteroid = asteroids[i].asteroid;
       if (collisionCheck(asteroid, ship)) {
-        destroyShip(app, ship);
+        destroyShip(ship);
         splitAsteroid(app, asteroids, i);
         playShipExplosion(ship.position.x, ship.position.y);
         sound.stop("thrust");

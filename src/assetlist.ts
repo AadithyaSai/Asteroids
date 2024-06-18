@@ -22,7 +22,7 @@ import meteorGrey_med2 from "./assets/image/meteorGrey_med2.png";
 import meteorGrey_small1 from "./assets/image/meteorGrey_small1.png";
 import meteorGrey_small2 from "./assets/image/meteorGrey_small2.png";
 
-import bgm from "./assets/sounds/bgm.ogg";
+import bgm from "./assets/sounds/bgm.wav";
 import explosion from "./assets/sounds/explosion.wav";
 import shoot from "./assets/sounds/shoot.wav";
 import shipExplosion from "./assets/sounds/shipexplosion.wav";

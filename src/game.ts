@@ -1,6 +1,11 @@
 import { Application, Assets, Texture, TilingSprite } from "pixi.js";
 import { sound } from "@pixi/sound";
-import { animateShip, createShip, resetShipData } from "./ship";
+import {
+  animateShip,
+  createShip,
+  resetShipData,
+  setInvulnerable,
+} from "./ship";
 import { animateAsteroids, createAsteroids } from "./asteroid";
 import { AsteroidType, BulletType } from "./utils/types";
 import { resetLives, updateGameLogic } from "./gamelogic";
@@ -101,6 +106,12 @@ export async function startGame() {
   const app = await setup();
   await preload();
 
+  if (localStorage.getItem("sound") === "on") {
+    sound.unmuteAll();
+  } else {
+    sound.muteAll();
+  }
+
   sound.play("bgm", { loop: true });
 
   const bg = Texture.from("background");
@@ -110,6 +121,16 @@ export async function startGame() {
     height: app.screen.height,
   });
   app.stage.addChild(bgTiles);
+
+  window.addEventListener("resize", () => {
+    if (
+      bgTiles.width < window.innerWidth ||
+      bgTiles.height < window.innerHeight
+    ) {
+      bgTiles.width = window.innerWidth;
+      bgTiles.height = window.innerHeight;
+    }
+  });
 
   initVFX(app);
 
@@ -122,14 +143,20 @@ export async function startGame() {
   createAsteroids(app, asteroids);
 
   let score = 0;
-  const scoreSpan = document.createElement("span");
-  scoreSpan.id = "score";
+  let scoreSpan = document.getElementById("score");
+  if (scoreSpan === null) {
+    scoreSpan = document.createElement("span");
+    scoreSpan.id = "score";
+  }
   scoreSpan.innerText = String(score).padStart(5, "0");
   document.getElementById("game")!.appendChild(scoreSpan);
 
-  let livesSpan = document.createElement("span");
-  livesSpan.id = "lives";
-  livesSpan.innerText = "Lives: 3";
+  let livesSpan = document.getElementById("lives");
+  if (livesSpan === null) {
+    livesSpan = document.createElement("span");
+    livesSpan.id = "lives";
+  }
+  livesSpan.innerText = "LIVES: 3";
   document.getElementById("game")!.appendChild(livesSpan);
 
   app.ticker.add((tick) => {
@@ -146,13 +173,14 @@ export async function startGame() {
       scoreSpan.innerText = String(score).padStart(5, "0");
     }
     if (update.killed) {
-      livesSpan.innerText = `Lives: ${update.lives}`;
+      livesSpan.innerText = `LIVES: ${update.lives}`;
       setTimeout(() => {
         resetShipData();
         app.stage.removeChild(ship);
         ship.destroy();
         if (update.lives > 0) {
           ship = createShip(app);
+          setInvulnerable(ship, 1.5);
         } else {
           sound.stopAll();
           window.dispatchEvent(new Event("gameover"));

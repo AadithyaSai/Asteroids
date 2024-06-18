@@ -17,6 +17,7 @@ export function initVFX(app: Application) {
   asteroidExplosion = new AnimatedSprite(asteroidExplosionTextures);
   asteroidExplosion.anchor.set(0.5);
   asteroidExplosion.loop = false;
+  asteroidExplosion.visible = false;
 
   const shipExplosionTextures: Texture[] = [];
   const shipExplosionBase = Texture.from("shipexplosionbase");
@@ -31,17 +32,20 @@ export function initVFX(app: Application) {
   shipExplosion = new AnimatedSprite(shipExplosionTextures);
   shipExplosion.anchor.set(0.5);
   shipExplosion.loop = false;
+  shipExplosion.visible = false;
 
   app.stage.addChild(asteroidExplosion);
   app.stage.addChild(shipExplosion);
 }
 
 export function playAsteroidExplosion(x: number, y: number) {
+  asteroidExplosion.visible = true;
   asteroidExplosion.position.set(x, y);
   asteroidExplosion.gotoAndPlay(0);
 }
 
 export function playShipExplosion(x: number, y: number) {
+  shipExplosion.visible = true;
   shipExplosion.position.set(x, y);
   shipExplosion.gotoAndPlay(0);
 }

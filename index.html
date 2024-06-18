@@ -20,8 +20,47 @@
     <div id="start" class="overlapping fullscreen dark flex">
       <h1>Asteroids!</h1>
       <button class="start-button">Start!</button>
+      <button class="sound"></button>
+      <button class="info">
+        <div class="circle">i</div>
+      </button>
+    </div>
+    <div id="information" class="overlapping fullscreen dark flex hide">
+      <h1>INFORMATION</h1>
+      <h3>-------------------------------</h3>
+      <h3>THIS GAME WAS CREATED BY</h3>
+      <h3>
+        Aadithya Sai (<a
+          href="https://www.github.com/AadithyaSai"
+          target="_blank"
+          >GITHUB</a
+        >)
+      </h3>
+      <h3>-------------------------------</h3>
+      <h3>THIS GAME IS OPEN SOURCE</h3>
+      <h3>
+        All Assets are from
+        <a href="https://www.opengameart.com" target="_blank">opengameart</a>
+      </h3>
+      <h3>-------------------------------</h3>
+      <h3>THANK YOU FOR PLAYING!</h3>
+      <button id="back">BACK</button>
+    </div>
+    <div id="first-time-overlay" class="overlapping fullscreen flex dark hide">
+      <h1>HOW TO PLAY</h1>
+      <h3>-------------------------------</h3>
+      <h3>USE <span class="boxed">W</span> TO ACTIVATE THRUSTERS</h3>
+      <h3>
+        USE <span class="boxed">A</span> AND
+        <span class="boxed" span>D</span> TO ROTATE THE SHIP
+      </h3>
+      <h3>USE <span class="boxed">SPACE</span> TO SHOOT</h3>
+      <h3>DESTROY ASTEROIDS TO SCORE POINTS. AVOID GETTING HIT!</h3>
+      <h3>-------------------------------</h3>
+      <button class="start-button">GOT IT!</button>
     </div>
     <div id="game" class="overlapping fullscreen hide">
+      <div id="game-canvas" class="overlapping fullscreen dark flex"></div>
       <div id="game-mobile-overlay" class="overlapping fullscreen">
         <button id="left">
           <img src="src/assets/image/Left Button.png" alt="" />
@@ -36,13 +75,17 @@
           <img src="src/assets/image/Up Button.png" alt="" />
         </button>
       </div>
-      <div id="game-canvas" class="overlapping fullscreen dark flex"></div>
     </div>
 
     <div id="end" class="overlapping fullscreen dark flex hide">
       <h1>Game Over!</h1>
       <h2 id="end-score"></h2>
+      <h2 id="hi-score"></h2>
       <button class="start-button">Restart!</button>
+      <button class="sound"></button>
+      <button class="info">
+        <div class="circle">i</div>
+      </button>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -3,6 +3,23 @@ import fireBullet from "./bullet";
 import { BulletType } from "./utils/types";
 import { sound } from "@pixi/sound";
 
+let invulnerable = false;
+export function isInvulnerable() {
+  return invulnerable;
+}
+
+export function setInvulnerable(ship: Sprite, sec: number) {
+  invulnerable = true;
+  const blink = setInterval(() => {
+    ship.alpha = ship.alpha === 1 ? 0.5 : 1;
+  }, 200);
+  setTimeout(() => {
+    invulnerable = false;
+    clearInterval(blink);
+    ship.alpha = 1;
+  }, sec * sec * 1000);
+}
+
 export function createShip(app: Application) {
   const ship = Sprite.from("ship");
 
@@ -96,7 +113,7 @@ export function animateShip(
   }
 }
 
-export function destroyShip(_app: Application, ship: Sprite) {
+export function destroyShip(ship: Sprite) {
   ship.visible = false;
   sound.play("shipExplosion");
 }
