@@ -14,15 +14,54 @@
     <meta name="msapplication-config" content="/browserconfig.xml" />
     <meta name="theme-color" content="#ffffff" />
 
-    <script type="module" crossorigin src="/Asteroids/assets/index-bfqdF2rm.js"></script>
-    <link rel="stylesheet" crossorigin href="/Asteroids/assets/index-C0vpd1c1.css">
+    <script type="module" crossorigin src="/Asteroids/assets/index-Bv17Hoai.js"></script>
+    <link rel="stylesheet" crossorigin href="/Asteroids/assets/index-Lg-dMeGy.css">
   </head>
   <body>
     <div id="start" class="overlapping fullscreen dark flex">
       <h1>Asteroids!</h1>
       <button class="start-button">Start!</button>
+      <button class="sound"></button>
+      <button class="info">
+        <div class="circle">i</div>
+      </button>
+    </div>
+    <div id="information" class="overlapping fullscreen dark flex hide">
+      <h1>INFORMATION</h1>
+      <h3>-------------------------------</h3>
+      <h3>THIS GAME WAS CREATED BY</h3>
+      <h3>
+        Aadithya Sai (<a
+          href="https://www.github.com/AadithyaSai"
+          target="_blank"
+          >GITHUB</a
+        >)
+      </h3>
+      <h3>-------------------------------</h3>
+      <h3>THIS GAME IS OPEN SOURCE</h3>
+      <h3>
+        All Assets are from
+        <a href="https://www.opengameart.com" target="_blank">opengameart</a>
+      </h3>
+      <h3>-------------------------------</h3>
+      <h3>THANK YOU FOR PLAYING!</h3>
+      <button id="back">BACK</button>
+    </div>
+    <div id="first-time-overlay" class="overlapping fullscreen flex dark hide">
+      <h1>HOW TO PLAY</h1>
+      <h3>-------------------------------</h3>
+      <h3>USE <span class="boxed">W</span> TO ACTIVATE THRUSTERS</h3>
+      <h3>
+        USE <span class="boxed">A</span> AND
+        <span class="boxed" span>D</span> TO ROTATE THE SHIP
+      </h3>
+      <h3>USE <span class="boxed">SPACE</span> TO SHOOT</h3>
+      <h3>DESTROY ASTEROIDS TO SCORE POINTS. AVOID GETTING HIT!</h3>
+      <h3>-------------------------------</h3>
+      <button class="start-button">GOT IT!</button>
     </div>
     <div id="game" class="overlapping fullscreen hide">
+      <div id="game-canvas" class="overlapping fullscreen dark flex"></div>
       <div id="game-mobile-overlay" class="overlapping fullscreen">
         <button id="left">
           <img src="data:image/png;base64,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" alt="" />
@@ -37,13 +76,17 @@
           <img src="data:image/png;base64,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" alt="" />
         </button>
       </div>
-      <div id="game-canvas" class="overlapping fullscreen dark flex"></div>
     </div>
 
     <div id="end" class="overlapping fullscreen dark flex hide">
       <h1>Game Over!</h1>
       <h2 id="end-score"></h2>
+      <h2 id="hi-score"></h2>
       <button class="start-button">Restart!</button>
+      <button class="sound"></button>
+      <button class="info">
+        <div class="circle">i</div>
+      </button>
     </div>
   </body>
 </html>
