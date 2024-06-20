@@ -16,7 +16,10 @@ startButtons.forEach((btn) => {
     startDiv.classList.add("hide");
     endDiv.classList.add("hide");
     document.documentElement.requestFullscreen();
-    if (localStorage.getItem("first-time") !== null) {
+    if (
+      localStorage.getItem("first-time") !== null ||
+      "ontouchstart" in document.documentElement
+    ) {
       firstTimeDiv.classList.add("hide");
       gameDiv.classList.remove("hide");
       startGame();
