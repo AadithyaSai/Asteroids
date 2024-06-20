@@ -78,14 +78,15 @@ export function animateShip(
     dx *= 0.99;
     dy *= 0.99;
   }
+  if (keyFlags.get("ArrowDown") || keyFlags.get("s")) {
+    dx *= 0.97;
+    dy *= 0.97;
+  }
   if (keyFlags.get("ArrowLeft") || keyFlags.get("a")) {
     ship.rotation -= 0.03;
   }
   if (keyFlags.get("ArrowRight") || keyFlags.get("d")) {
     ship.rotation += 0.03;
-  }
-  if (keyFlags.get("ArrowDown") || keyFlags.get("s")) {
-    // TODO: wormhole
   }
   ship.rotation %= Math.PI * 2;
 
