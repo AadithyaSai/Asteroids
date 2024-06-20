@@ -149,6 +149,9 @@ button {
   pointer-events: all;
   cursor: pointer;
   transform: rotate(90deg);
+  user-select: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #left {
