@@ -4,6 +4,17 @@ import { BulletType } from "./utils/types";
 import { sound } from "@pixi/sound";
 
 let invulnerable = false;
+let maxSpeed = 5;
+let dx = 0;
+let dy = 0;
+let lastShot = new Date().getTime();
+
+export function resetShipData() {
+  maxSpeed = 5;
+  dx = 0;
+  dy = 0;
+  lastShot = new Date().getTime();
+}
 export function isInvulnerable() {
   return invulnerable;
 }
@@ -32,21 +43,14 @@ export function createShip(app: Application) {
   shipTrail.visible = false;
   ship.addChild(shipTrail);
 
+  if (matchMedia("(max-width: 600px)").matches) {
+    ship.scale.set(0.5);
+    maxSpeed = 2.5;
+  }
+
   app.stage.addChild(ship);
 
   return ship;
-}
-
-let maxSpeed = 5;
-let dx = 0;
-let dy = 0;
-let lastShot = new Date().getTime();
-
-export function resetShipData() {
-  maxSpeed = 5;
-  dx = 0;
-  dy = 0;
-  lastShot = new Date().getTime();
 }
 
 export function animateShip(

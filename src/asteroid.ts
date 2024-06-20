@@ -9,6 +9,8 @@ const smallAsteroids = 2;
 const asteroidSizes = ["big", "med", "small"];
 const asteroidColors = ["Grey", "Brown"];
 
+let baseSpeed = 0.8;
+
 export function incAsteroidCount() {
   count++;
 }
@@ -54,6 +56,11 @@ function createAsteroid(size: number, color?: string) {
   let heading = Math.random() * Math.PI * 2;
   let spin = Math.random() * 0.01 - 0.005;
 
+  if (matchMedia("(max-width: 600px)").matches) {
+    asteroid.scale.set(0.5);
+    baseSpeed = 0.4;
+  }
+
   return {
     asteroid,
     size,
@@ -67,7 +74,7 @@ export function animateAsteroids(app: Application, asteroids: AsteroidType[]) {
   for (let i = 0; i < asteroids.length; i++) {
     const asteroid = asteroids[i].asteroid;
     const heading = asteroids[i].heading;
-    const speed = 0.8 + asteroids[i].size * 1.2;
+    const speed = baseSpeed + asteroids[i].size * 1.2;
     asteroid.position.x += speed * Math.cos(heading);
     asteroid.position.y += speed * Math.sin(heading);
 

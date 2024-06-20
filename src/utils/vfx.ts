@@ -34,6 +34,11 @@ export function initVFX(app: Application) {
   shipExplosion.loop = false;
   shipExplosion.visible = false;
 
+  if (matchMedia("(max-width: 600px)").matches) {
+    asteroidExplosion.scale.set(0.5);
+    shipExplosion.scale.set(0.5);
+  }
+
   app.stage.addChild(asteroidExplosion);
   app.stage.addChild(shipExplosion);
 }

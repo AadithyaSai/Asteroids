@@ -2,7 +2,7 @@ import { Application, Sprite } from "pixi.js";
 import { GlowFilter } from "pixi-filters";
 import { BulletType } from "./utils/types";
 
-// fixme: make animation independant of bullet instance
+let bulletSpeed = 7;
 
 export default function fireBullet(
   app: Application,
@@ -25,17 +25,20 @@ export default function fireBullet(
     }),
   ];
 
+  if (matchMedia("(max-width: 600px)").matches) {
+    bullet.scale.set(0.5);
+    bulletSpeed = 5;
+  }
+
   app.stage.addChild(bullet);
   bullets.push({ bullet, enemy: false });
 }
 
 export function animateBullets(app: Application, bullets: BulletType[]) {
-  const speed = 7;
-
   for (let i = 0; i < bullets.length; i++) {
     const bullet = bullets[i].bullet;
-    bullet.position.x += speed * Math.cos(bullet.rotation);
-    bullet.position.y += speed * Math.sin(bullet.rotation);
+    bullet.position.x += bulletSpeed * Math.cos(bullet.rotation);
+    bullet.position.y += bulletSpeed * Math.sin(bullet.rotation);
 
     if (
       bullet.position.x < 0 ||
